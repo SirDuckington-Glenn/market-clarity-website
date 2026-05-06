@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Clarity</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #fff; color: #1a1a1a; font-family: "Source Serif 4", Georgia, serif; font-size: 17px; line-height: 1.7; }
+
+  .top-bar { background: #1a1a1a; color: #ccc; text-align: center; padding: 8px 20px; font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; letter-spacing: 0.5px; }
+  .top-bar strong { color: #fff; }
+  .lang-bar { text-align: right; padding: 6px 60px; border-bottom: 1px solid #ddd; background: #fff; }
+  .lang-btn { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; letter-spacing: 1.5px; cursor: pointer; background: none; border: 1px solid #1a1a1a; padding: 4px 12px; color: #1a1a1a; text-transform: uppercase; }
+  .lang-btn:hover { background: #1a1a1a; color: #fff; }
+
+  nav { border-bottom: 2px solid #1a1a1a; padding: 20px 60px; display: flex; align-items: center; justify-content: space-between; background: #fff; }
+  .logo { font-family: "Playfair Display", serif; font-weight: 900; font-size: 1.6rem; color: #1a1a1a; }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { color: #1a1a1a; text-decoration: none; font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .nav-links a:hover { border-bottom-color: #1a1a1a; }
+  .nav-cta { background: #1a1a1a !important; color: #fff !important; padding: 8px 16px; border-bottom: none !important; }
+  .rule-thick { border: none; border-top: 3px solid #1a1a1a; }
+  .rule { border: none; border-top: 1px solid #ddd; }
+
+  .hero { max-width: 860px; margin: 0 auto; padding: 80px 60px 60px; text-align: center; border-bottom: 1px solid #ddd; }
+  .hero-kicker { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: #666; margin-bottom: 24px; display: block; }
+  .hero h1 { font-family: "Playfair Display", serif; font-size: clamp(2.6rem, 6vw, 5rem); font-weight: 900; line-height: 1.08; color: #1a1a1a; margin-bottom: 24px; letter-spacing: -1px; }
+  .hero-deck { font-size: 1.05rem; color: #444; max-width: 580px; margin: 0 auto 20px; line-height: 1.75; font-weight: 300; }
+  .hero-disclaimer { font-family: "IBM Plex Mono", monospace; font-size: 0.66rem; color: #bbb; margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+  .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+
+  .btn-primary { background: #1a1a1a; color: #fff; padding: 12px 32px; font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; display: inline-block; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { border: 1px solid #1a1a1a; color: #1a1a1a; padding: 12px 32px; font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-block; }
+  .btn-secondary:hover { background: #1a1a1a; color: #fff; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 60px; }
+  .section-label { font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: #999; margin-bottom: 8px; display: block; }
+  h2.section-title { font-family: "Playfair Display", serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; color: #1a1a1a; line-height: 1.2; margin-bottom: 20px; }
+  .lead { font-size: 1rem; color: #555; line-height: 1.8; max-width: 640px; margin-bottom: 48px; }
+
+  .steps { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid #ddd; }
+  .step { padding: 36px 32px 36px 0; border-bottom: 1px solid #ddd; }
+  .step:nth-child(even) { padding-left: 32px; padding-right: 0; border-left: 1px solid #ddd; }
+  .step-num { font-family: "IBM Plex Mono", monospace; font-size: 0.62rem; letter-spacing: 2px; color: #999; margin-bottom: 12px; display: block; }
+  .step h3 { font-family: "Playfair Display", serif; font-size: 1.05rem; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; }
+  .step p { font-size: 0.83rem; color: #555; line-height: 1.7; }
+
+  .pricing-container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid #ddd; margin-top: 48px; }
+  .plan { padding: 40px 28px; border-right: 1px solid #ddd; }
+  .plan:last-child { border-right: none; }
+  .plan.featured { background: #1a1a1a; color: #fff; }
+  .plan-name { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: #999; margin-bottom: 6px; display: block; }
+  .plan.featured .plan-name { color: #aaa; }
+  .plan-title { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .plan.featured .plan-title { color: #fff; }
+  .plan-price { font-family: "IBM Plex Mono", monospace; font-size: 1.6rem; font-weight: 500; color: #1a1a1a; margin-bottom: 16px; }
+  .plan.featured .plan-price { color: #fff; }
+  .plan-price span { font-size: 0.75rem; color: #999; font-weight: 300; }
+  .plan-desc { font-size: 0.82rem; color: #666; margin-bottom: 28px; line-height: 1.65; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+  .plan.featured .plan-desc { color: #bbb; border-bottom-color: #333; }
+  .plan-features { list-style: none; margin-bottom: 32px; }
+  .plan-features li { font-size: 0.78rem; color: #333; padding: 7px 0; border-bottom: 1px solid #f0f0f0; display: flex; gap: 8px; }
+  .plan.featured .plan-features li { color: #ddd; border-bottom-color: #2a2a2a; }
+  .plan-features li::before { content: "—"; color: #bbb; flex-shrink: 0; }
+  .plan-features li.locked { opacity: 0.3; }
+  .plan-btn { display: block; text-align: center; padding: 10px; font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; border: 1px solid #1a1a1a; color: #1a1a1a; transition: all 0.2s; }
+  .plan-btn:hover { background: #1a1a1a; color: #fff; }
+  .plan.featured .plan-btn { border-color: #fff; color: #fff; }
+  .plan.featured .plan-btn:hover { background: #fff; color: #1a1a1a; }
+
+  .legal-note { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; color: #aaa; line-height: 1.7; margin-top: 32px; padding: 20px; border-left: 2px solid #ddd; }
+
+  .cta-section { background: #1a1a1a; color: #fff; padding: 80px 60px; text-align: center; }
+  .cta-section h2 { font-family: "Playfair Display", serif; font-size: clamp(1.8rem, 4vw, 3rem); color: #fff; margin-bottom: 16px; }
+  .cta-section p { color: #888; font-size: 0.88rem; margin-bottom: 36px; max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  .btn-white { background: #fff; color: #1a1a1a; padding: 12px 36px; font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.2s; }
+  .btn-white:hover { background: #eee; }
+
+  footer { border-top: 2px solid #1a1a1a; padding: 32px 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-logo { font-family: "Playfair Display", serif; font-weight: 900; font-size: 1.1rem; color: #1a1a1a; }
+  .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .footer-links a { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; color: #666; text-decoration: none; }
+  .footer-links a:hover { color: #1a1a1a; }
+  .footer-copy { font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: #999; text-align: right; line-height: 1.6; }
+
+  @media (max-width: 700px) { .pricing-grid { grid-template-columns: 1fr; } .plan { border-right: none; border-bottom: 1px solid #ddd; } }
+  @media (max-width: 768px) { nav { padding: 16px 20px; } .nav-links { display: none; } .hero { padding: 60px 24px; } .container { padding: 40px 20px; } .pricing-container { padding: 40px 20px; } .steps { grid-template-columns: 1fr; } .step:nth-child(even) { padding-left: 0; border-left: none; } .cta-section { padding: 60px 24px; } footer { padding: 24px 20px; flex-direction: column; text-align: center; } .footer-copy { text-align: center; } .footer-links { justify-content: center; } .lang-bar { padding: 6px 20px; } }
+</style>
+</head>
+<body>
+
+<div class="top-bar" id="top-bar-text">
+  <strong>Notice:</strong> Market Clarity is a personal market journal and educational publication. Not financial advice. Not a licensed advisor. We document — you decide.
+</div>
+<div class="lang-bar">
+  <button class="lang-btn" id="lang-toggle">DE</button>
+</div>
+
+<nav>
+  <div class="logo">Market Clarity</div>
+  <div class="nav-links">
+    <a href="#about" id="nav-about">About</a>
+    <a href="#pricing" id="nav-pricing">Subscribe</a>
+    <a href="https://x.com/Market_Clarity_" target="_blank">&#x1D54F; Twitter</a>
+    <a href="mailto:promptsphereio@gmail.com" id="nav-contact">Contact</a>
+    <a href="https://t.me/Market_Clarity" class="nav-cta" id="nav-cta">Read on Telegram</a>
+  </div>
+</nav>
+<hr class="rule-thick">
+
+<div class="hero">
+  <span class="hero-kicker" id="hero-kicker">Personal Market Journal &mdash; Published Daily</span>
+  <h1 id="hero-h1">One Trader.<br>One Algorithm.<br>Full Transparency.</h1>
+  <p class="hero-deck" id="hero-deck">Market Clarity is a daily market journal documenting one trader&rsquo;s observations and the decisions of a rules-based algorithm I built myself &mdash; published openly for anyone who wants to follow along and learn.</p>
+  <div class="hero-actions">
+    <a href="https://t.me/Market_Clarity" class="btn-primary" id="hero-btn1">Read Free on Telegram</a>
+    <a href="#pricing" class="btn-secondary" id="hero-btn2">Subscribe</a>
+  </div>
+  <p class="hero-disclaimer" id="hero-note">This is a personal publication. All content reflects the author&rsquo;s own observations and documented experiences. Nothing here is financial advice, a recommendation, or a signal service. You are responsible for your own decisions.</p>
+</div>
+
+<div class="container" id="about">
+  <span class="section-label" id="about-label">What This Is</span>
+  <h2 class="section-title" id="about-title">A Journal, Not a Service.</h2>
+  <p class="lead" id="about-lead">Every day before the market opens, I document what I observe &mdash; macro context, price structure, and the logic my algorithm uses to decide whether conditions are favorable. This is a public record of a process, not a call to action.</p>
+
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <h3 id="s1-h">Daily Macro Observations</h3>
+      <p id="s1-p">Every morning I note what I see in volatility, yields, dollar, gold, and oil &mdash; and what it might mean for the broader environment. My personal read, documented.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <h3 id="s2-h">Price Structure Notes</h3>
+      <p id="s2-p">I document the opening range, key levels, and where price is relative to structure. Observation only &mdash; not a directive.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <h3 id="s3-h">Algorithm Diary</h3>
+      <p id="s3-p">My rules-based algorithm runs daily. I publish what it sees, what it decides, and why &mdash; win or lose. A transparent log of a system in motion.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">04</span>
+      <h3 id="s4-h">Paper Trading Log</h3>
+      <p id="s4-p">All documented trades are hypothetical paper trades. I record every entry, exit, and outcome &mdash; publicly, with no edits. A live trading diary for anyone to follow.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="rule">
+
+<div class="pricing-container" id="pricing">
+  <span class="section-label" id="pricing-label">Subscribe</span>
+  <h2 class="section-title" id="pricing-title">Choose Your Access.</h2>
+  <p class="lead" id="pricing-lead">All tiers are a subscription to a personal market journal. You are subscribing to read &mdash; not to receive advice.</p>
+
+  <div class="pricing-grid">
+    <div class="plan">
+      <span class="plan-name" id="plan1-tier">Free</span>
+      <div class="plan-title" id="plan1-name">The Journal</div>
+      <div class="plan-price">$0 <span id="plan1-mo">/ month</span></div>
+      <p class="plan-desc" id="plan1-desc">My daily market observations, published openly. No card required. Just read along.</p>
+      <ul class="plan-features">
+        <li id="f1-1">Daily macro observation</li>
+        <li id="f1-2">Opening range notes</li>
+        <li id="f1-3">Market mood commentary</li>
+        <li id="f1-4">Educational context</li>
+        <li class="locked" id="f1-5">Full methodology</li>
+        <li class="locked" id="f1-6">Algorithm diary</li>
+        <li class="locked" id="f1-7">Behind the scenes</li>
+      </ul>
+      <a href="https://t.me/Market_Clarity" class="plan-btn" id="plan1-btn">Read Free</a>
+    </div>
+
+    <div class="plan featured">
+      <span class="plan-name" id="plan2-tier">Pro &mdash; $29 / month</span>
+      <div class="plan-title" id="plan2-name">Deep Dive</div>
+      <div class="plan-price">$29 <span id="plan2-mo">/ month</span></div>
+      <p class="plan-desc" id="plan2-desc">The full journal &mdash; extended observations, complete methodology notes, and the full algorithm diary entry every day.</p>
+      <ul class="plan-features">
+        <li id="f2-1">Everything in The Journal</li>
+        <li id="f2-2">Extended macro observations</li>
+        <li id="f2-3">Full algorithm diary</li>
+        <li id="f2-4">Multi-timeframe observations</li>
+        <li id="f2-5">Scoring methodology notes</li>
+        <li id="f2-6">VWAP &amp; structure context</li>
+        <li class="locked" id="f2-7">Behind the scenes</li>
+      </ul>
+      <a href="mailto:promptsphereio@gmail.com?subject=Deep Dive" class="plan-btn" id="plan2-btn">Subscribe</a>
+    </div>
+
+    <div class="plan">
+      <span class="plan-name" id="plan3-tier">Algo &mdash; $99 / month</span>
+      <div class="plan-title" id="plan3-name">Behind the Scenes</div>
+      <div class="plan-price">$99 <span id="plan3-mo">/ month</span></div>
+      <p class="plan-desc" id="plan3-desc">Full access to the engine room &mdash; every decision the algorithm makes, explained in plain language with monthly retrospectives.</p>
+      <ul class="plan-features">
+        <li id="f3-1">Everything in Deep Dive</li>
+        <li id="f3-2">Full decision log explained</li>
+        <li id="f3-3">Monthly retrospective</li>
+        <li id="f3-4">Strategy logic walkthrough</li>
+        <li id="f3-5">Regime &amp; bias reasoning</li>
+        <li id="f3-6">Paper trade P&amp;L diary</li>
+        <li id="f3-7">Priority correspondence</li>
+      </ul>
+      <a href="mailto:promptsphereio@gmail.com?subject=Behind the Scenes" class="plan-btn" id="plan3-btn">Subscribe</a>
+    </div>
+  </div>
+
+  <div class="legal-note" id="legal-note">
+    All subscription tiers provide access to a personal market journal and educational publication only. Market Clarity is not a financial advisor, broker, or signal service. Nothing published constitutes a recommendation to buy or sell any instrument. All documented trades are hypothetical paper trades. Past outcomes do not indicate future results. You are solely responsible for your own financial decisions.
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2 id="cta-h2">Start Reading. Free.</h2>
+  <p id="cta-p">Join on Telegram and follow the daily journal &mdash; no commitment, no card, no advice.</p>
+  <a href="https://t.me/Market_Clarity" class="btn-white" id="cta-btn">Open the Journal</a>
+</div>
+
+<footer>
+  <div class="footer-logo">Market Clarity</div>
+  <div class="footer-links">
+    <a href="#pricing" id="footer-sub">Subscribe</a>
+    <a href="privacy.html" id="footer-privacy">Privacy</a>
+    <a href="terms.html" id="footer-terms">Terms</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="https://x.com/Market_Clarity_" target="_blank">Twitter</a>
+    <a href="mailto:promptsphereio@gmail.com" id="footer-contact">Contact</a>
+  </div>
+  <div class="footer-copy" id="footer-copy">&copy; 2025 Market Clarity<br>Personal market journal. Not financial advice.</div>
+</footer>
+
+<script>
+var lang = "en";
+
+var T = {
+  en: {
+    "top-bar-text": "<strong>Notice:</strong> Market Clarity is a personal market journal and educational publication. Not financial advice. Not a licensed advisor. We document — you decide.",
+    "nav-about": "About",
+    "nav-pricing": "Subscribe",
+    "nav-contact": "Contact",
+    "nav-cta": "Read on Telegram",
+    "hero-kicker": "Personal Market Journal — Published Daily",
+    "hero-h1": "One Trader.<br>One Algorithm.<br>Full Transparency.",
+    "hero-deck": "Market Clarity is a daily market journal documenting one trader's observations and the decisions of a rules-based algorithm I built myself — published openly for anyone who wants to follow along and learn.",
+    "hero-btn1": "Read Free on Telegram",
+    "hero-btn2": "Subscribe",
+    "hero-note": "This is a personal publication. Nothing here is financial advice, a recommendation, or a signal service. You are responsible for your own decisions.",
+    "about-label": "What This Is",
+    "about-title": "A Journal, Not a Service.",
+    "about-lead": "Every day before the market opens, I document what I observe — macro context, price structure, and the logic my algorithm uses. This is a public record of a process, not a call to action.",
+    "s1-h": "Daily Macro Observations",
+    "s1-p": "Every morning I note what I see in volatility, yields, dollar, gold, and oil — and what it might mean for the broader environment. My personal read, documented.",
+    "s2-h": "Price Structure Notes",
+    "s2-p": "I document the opening range, key levels, and where price is relative to structure. Observation only — not a directive.",
+    "s3-h": "Algorithm Diary",
+    "s3-p": "My rules-based algorithm runs daily. I publish what it sees, what it decides, and why — win or lose. A transparent log of a system in motion.",
+    "s4-h": "Paper Trading Log",
+    "s4-p": "All documented trades are hypothetical paper trades. I record every entry, exit, and outcome — publicly, with no edits.",
+    "pricing-label": "Subscribe",
+    "pricing-title": "Choose Your Access.",
+    "pricing-lead": "All tiers are a subscription to a personal market journal. You are subscribing to read — not to receive advice.",
+    "plan1-tier": "Free",
+    "plan1-name": "The Journal",
+    "plan1-mo": "/ month",
+    "plan1-desc": "My daily market observations, published openly. No card required. Just read along.",
+    "plan2-tier": "Pro",
+    "plan2-name": "Deep Dive",
+    "plan2-mo": "/ month",
+    "plan2-desc": "The full journal — extended observations, complete methodology notes, and the full algorithm diary every day.",
+    "plan3-tier": "Algo",
+    "plan3-name": "Behind the Scenes",
+    "plan3-mo": "/ month",
+    "plan3-desc": "Full access to the engine room — every decision the algorithm makes, explained in plain language with monthly retrospectives.",
+    "f1-1": "Daily macro observation",
+    "f1-2": "Opening range notes",
+    "f1-3": "Market mood commentary",
+    "f1-4": "Educational context",
+    "f1-5": "Full methodology",
+    "f1-6": "Algorithm diary",
+    "f1-7": "Behind the scenes",
+    "f2-1": "Everything in The Journal",
+    "f2-2": "Extended macro observations",
+    "f2-3": "Full algorithm diary",
+    "f2-4": "Multi-timeframe observations",
+    "f2-5": "My personal scoring notes",
+    "f2-6": "VWAP and structure context",
+    "f2-7": "Behind the scenes",
+    "f3-1": "Everything in Deep Dive",
+    "f3-2": "Full decision log explained",
+    "f3-3": "Monthly retrospective",
+    "f3-4": "Strategy logic walkthrough",
+    "f3-5": "Regime and bias reasoning",
+    "f3-6": "Paper trade P&L diary",
+    "f3-7": "Priority correspondence",
+    "plan1-btn": "Read Free",
+    "plan2-btn": "Subscribe",
+    "plan3-btn": "Subscribe",
+    "legal-note": "All subscription tiers provide access to a personal market journal only. Market Clarity is not a financial advisor or signal service. Nothing published constitutes a recommendation to buy or sell any instrument. All documented trades are hypothetical. Past outcomes do not indicate future results.",
+    "cta-h2": "Start Reading. Free.",
+    "cta-p": "Join on Telegram and follow the daily journal — no commitment, no card, no advice.",
+    "cta-btn": "Open the Journal",
+    "footer-sub": "Subscribe",
+    "footer-privacy": "Privacy",
+    "footer-terms": "Terms",
+    "footer-contact": "Contact",
+    "footer-copy": "© 2025 Market Clarity<br>Personal market journal. Not financial advice."
+  },
+  de: {
+    "top-bar-text": "<strong>Hinweis:</strong> Market Clarity ist ein persönliches Markttagebuch. Keine Finanzberatung. Kein lizenzierter Berater. Wir dokumentieren — Sie entscheiden.",
+    "nav-about": "Über uns",
+    "nav-pricing": "Abonnieren",
+    "nav-contact": "Kontakt",
+    "nav-cta": "Auf Telegram lesen",
+    "hero-kicker": "Persönliches Markttagebuch — Täglich veröffentlicht",
+    "hero-h1": "Ein Trader.<br>Ein Algorithmus.<br>Volle Transparenz.",
+    "hero-deck": "Market Clarity ist ein tägliches Markttagebuch, das meine Beobachtungen und die Entscheidungen eines Algorithmus dokumentiert, den ich selbst entwickelt habe — offen veröffentlicht für jeden, der mitlesen möchte.",
+    "hero-btn1": "Kostenlos auf Telegram lesen",
+    "hero-btn2": "Abonnieren",
+    "hero-note": "Dies ist eine persönliche Publikation. Nichts hier ist Finanzberatung oder eine Empfehlung. Sie sind für Ihre eigenen Entscheidungen verantwortlich.",
+    "about-label": "Was das ist",
+    "about-title": "Ein Tagebuch, kein Service.",
+    "about-lead": "Jeden Tag vor Marktöffnung dokumentiere ich, was ich beobachte — Makrokontext, Preisstruktur und die Logik meines Algorithmus. Dies ist eine öffentliche Aufzeichnung, kein Handlungsaufruf.",
+    "s1-h": "Tägliche Makrobeobachtungen",
+    "s1-p": "Jeden Morgen notiere ich, was ich in Volatilität, Zinsen, Dollar, Gold und Öl sehe. Meine persönliche Einschätzung, dokumentiert.",
+    "s2-h": "Preisstruktur-Notizen",
+    "s2-p": "Ich dokumentiere die Opening Range, wichtige Levels und wo der Preis relativ zur Struktur steht. Nur Beobachtung — keine Anweisung.",
+    "s3-h": "Algorithmus-Tagebuch",
+    "s3-p": "Mein regelbasierter Algorithmus läuft täglich. Ich veröffentliche was er sieht, entscheidet und warum — Gewinn oder Verlust.",
+    "s4-h": "Paper-Trading-Log",
+    "s4-p": "Alle dokumentierten Trades sind hypothetische Paper Trades. Ich zeichne jeden Ein- und Ausstieg auf — öffentlich, ohne Korrekturen.",
+    "pricing-label": "Abonnieren",
+    "pricing-title": "Wählen Sie Ihren Zugang.",
+    "pricing-lead": "Alle Stufen sind ein Abonnement eines persönlichen Markttagebuchs. Sie abonnieren um zu lesen — nicht um Beratung zu erhalten.",
+    "plan1-tier": "Kostenlos",
+    "plan1-name": "Das Tagebuch",
+    "plan1-mo": "/ Monat",
+    "plan1-desc": "Meine täglichen Marktbeobachtungen, offen veröffentlicht. Keine Karte erforderlich.",
+    "plan2-tier": "Pro",
+    "plan2-name": "Deep Dive",
+    "plan2-mo": "/ Monat",
+    "plan2-desc": "Das vollständige Tagebuch — erweiterte Beobachtungen, vollständige Methodiknotizen und der vollständige Algorithmus-Eintrag jeden Tag.",
+    "plan3-tier": "Algo",
+    "plan3-name": "Behind the Scenes",
+    "plan3-mo": "/ Monat",
+    "plan3-desc": "Voller Zugang zum Maschinenraum — jede Entscheidung des Algorithmus, klar erklärt, mit monatlichen Rückblicken.",
+    "f1-1": "Tägliche Makrobeobachtung",
+    "f1-2": "Opening-Range-Notizen",
+    "f1-3": "Marktstimmungskommentar",
+    "f1-4": "Bildungskontext",
+    "f1-5": "Vollständige Methodik",
+    "f1-6": "Algorithmus-Tagebuch",
+    "f1-7": "Behind the Scenes",
+    "f2-1": "Alles aus Das Tagebuch",
+    "f2-2": "Erweiterte Makrobeobachtungen",
+    "f2-3": "Vollständiges Algorithmus-Tagebuch",
+    "f2-4": "Multi-Timeframe-Beobachtungen",
+    "f2-5": "Persönliche Bewertungsnotizen",
+    "f2-6": "VWAP und Strukturkontext",
+    "f2-7": "Behind the Scenes",
+    "f3-1": "Alles aus Deep Dive",
+    "f3-2": "Vollständiges Entscheidungslog erklärt",
+    "f3-3": "Monatlicher Rückblick",
+    "f3-4": "Strategie-Logik-Walkthrough",
+    "f3-5": "Regime und Bias-Begründung",
+    "f3-6": "Paper-Trade-Tagebuch",
+    "f3-7": "Prioritätskorrespondenz",
+    "plan1-btn": "Kostenlos lesen",
+    "plan2-btn": "Abonnieren",
+    "plan3-btn": "Abonnieren",
+    "legal-note": "Alle Abonnementstufen bieten Zugang zu einem persönlichen Markttagebuch. Market Clarity ist kein Finanzberater. Nichts Veröffentlichtes stellt eine Empfehlung dar. Alle dokumentierten Trades sind hypothetisch.",
+    "cta-h2": "Kostenlos lesen.",
+    "cta-p": "Treten Sie auf Telegram bei und folgen Sie dem täglichen Tagebuch — keine Verpflichtung, keine Karte.",
+    "cta-btn": "Das Tagebuch öffnen",
+    "footer-sub": "Abonnieren",
+    "footer-privacy": "Datenschutz",
+    "footer-terms": "AGB",
+    "footer-contact": "Kontakt",
+    "footer-copy": "© 2025 Market Clarity<br>Persönliches Markttagebuch. Keine Finanzberatung."
+  }
+};
+
+function toggleLang() {
+  lang = lang === "en" ? "de" : "en";
+  applyLang();
+}
+
+function applyLang() {
+  var t = T[lang];
+  var ids = Object.keys(t);
+  for (var i = 0; i < ids.length; i++) {
+    var el = document.getElementById(ids[i]);
+    if (el) el.innerHTML = t[ids[i]];
+  }
+  document.getElementById("lang-toggle").textContent = lang === "en" ? "DE" : "EN";
+  document.documentElement.lang = lang;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("lang-toggle").addEventListener("click", toggleLang);
+});
+</script>
+</body>
+</html>
